@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Gallery, Map, PaintBucket, Image, Book, Menu, X } from "lucide-react";
+import { Image, Map, PaintBucket, Book, Menu, X } from "lucide-react";
 
 export function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +13,7 @@ export function Sidebar() {
     {
       name: "Overview",
       path: "/",
-      icon: <Gallery className="w-5 h-5" />
+      icon: <Image className="w-5 h-5" />
     },
     {
       name: "Explore Art Forms",
