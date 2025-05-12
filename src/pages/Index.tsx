@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { StatsCard } from "@/components/StatsCard";
 import { Link } from "react-router-dom";
 import { artForms, regions } from "@/lib/data";
-import { Map, PaintBucket, Book, Image } from "lucide-react";
+import { Gallery, Map, PaintBucket, Book } from "lucide-react";
 
 const Index = () => {
   // Get featured art forms (with UNESCO recognition or high popularity)
@@ -52,7 +52,7 @@ const Index = () => {
               title="UNESCO Recognized" 
               value="13"
               description="Cultural art practices"
-              icon={<Image size={24} />}
+              icon={<Gallery size={24} />}
             />
             <StatsCard 
               title="Cultural Tourism Sites" 

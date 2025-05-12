@@ -26,13 +26,13 @@ export function TourismChart({ data, className }: TourismChartProps) {
   
   const filteredData = data.filter(item => item.year === selectedYear);
   
-  const formatNumber = (num: number): string => {
+  const formatNumber = (num: number) => {
     if (num >= 1000000) {
       return `${(num / 1000000).toFixed(1)}M`;
     } else if (num >= 1000) {
       return `${(num / 1000).toFixed(0)}K`;
     }
-    return num.toString();
+    return num;
   };
 
   return (
@@ -67,7 +67,7 @@ export function TourismChart({ data, className }: TourismChartProps) {
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
               <XAxis dataKey="month" />
-              <YAxis tickFormatter={(value) => formatNumber(value as number)} />
+              <YAxis tickFormatter={formatNumber} />
               <Tooltip 
                 formatter={(value: number) => [`${formatNumber(value)}`, undefined]}
                 labelFormatter={(label) => `${label} ${selectedYear}`}
