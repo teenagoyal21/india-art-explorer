@@ -1,8 +1,8 @@
 
-import React, { useState } from "react";
+import React from "react";
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -11,84 +11,90 @@ import {
   ResponsiveContainer
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TourismTrend } from "@/lib/data";
 
-interface TourismChartProps {
-  data: TourismTrend[];
-  className?: string;
+interface TourismData {
+  region: string;
+  domestic: number;
+  international: number;
+  growth: number;
 }
 
-export function TourismChart({ data, className }: TourismChartProps) {
-  const [selectedYear, setSelectedYear] = useState<number>(2023);
-  
-  const years = Array.from(new Set(data.map(item => item.year))).sort((a, b) => b - a);
-  
-  const filteredData = data.filter(item => item.year === selectedYear);
-  
-  const formatNumber = (num: number) => {
-    if (num >= 1000000) {
-      return `${(num / 1000000).toFixed(1)}M`;
-    } else if (num >= 1000) {
-      return `${(num / 1000).toFixed(0)}K`;
+interface TourismChartProps {
+  data: TourismData[];
+  type: "visitors" | "growth";
+  title: string;
+}
+
+export function TourismChart({ data, type, title }: TourismChartProps) {
+  // Format large numbers with abbreviations (K for thousands, M for millions)
+  const formatYAxis = (value: number): string => {
+    if (value >= 1000000) {
+      return `${(value / 1000000).toFixed(1)}M`;
+    } else if (value >= 1000) {
+      return `${(value / 1000).toFixed(1)}K`;
     }
-    return num;
+    return value.toString();
+  };
+
+  // Format for tooltip
+  const formatNumber = (value: number): string => {
+    if (value >= 1000000) {
+      return `${(value / 1000000).toFixed(2)}M`;
+    } else if (value >= 1000) {
+      return `${(value / 1000).toFixed(1)}K`;
+    }
+    return value.toString();
+  };
+
+  // Get the right data to display based on the type
+  const getChartData = () => {
+    if (type === "visitors") {
+      return (
+        <>
+          <Bar
+            dataKey="domestic"
+            fill="#FF9933" // India Saffron
+            name="Domestic Visitors"
+          />
+          <Bar
+            dataKey="international"
+            fill="#138808" // India Green
+            name="International Visitors"
+          />
+        </>
+      );
+    } else {
+      return (
+        <Bar
+          dataKey="growth"
+          fill="#000080" // Navy Blue
+          name="Annual Growth (%)"
+        />
+      );
+    }
   };
 
   return (
-    <Card className={className}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-        <CardTitle className="text-lg font-medium">Tourism Trends</CardTitle>
-        <Select
-          value={selectedYear.toString()}
-          onValueChange={(value) => setSelectedYear(parseInt(value))}
-        >
-          <SelectTrigger className="w-[100px]">
-            <SelectValue placeholder="Year" />
-          </SelectTrigger>
-          <SelectContent>
-            {years.map(year => (
-              <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
       </CardHeader>
-      <CardContent className="pt-2">
+      <CardContent>
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={filteredData}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
+            <BarChart
+              data={data}
+              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-              <XAxis dataKey="month" />
-              <YAxis tickFormatter={formatNumber} />
-              <Tooltip 
-                formatter={(value: number) => [`${formatNumber(value)}`, undefined]}
-                labelFormatter={(label) => `${label} ${selectedYear}`}
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="region" />
+              <YAxis tickFormatter={(value: any) => formatYAxis(value)} />
+              <Tooltip
+                formatter={(value: number) => [formatNumber(value)]}
               />
               <Legend />
-              <Line
-                type="monotone"
-                dataKey="domestic"
-                name="Domestic"
-                stroke="#FF9933"
-                activeDot={{ r: 8 }}
-                strokeWidth={2}
-              />
-              <Line
-                type="monotone"
-                dataKey="international"
-                name="International"
-                stroke="#138808"
-                strokeWidth={2}
-              />
-            </LineChart>
+              {getChartData()}
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </CardContent>
