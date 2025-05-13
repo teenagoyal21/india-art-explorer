@@ -10,6 +10,7 @@ import MapPage from "./pages/MapPage";
 import TourismPage from "./pages/TourismPage";
 import ResponsibleTourismPage from "./pages/ResponsibleTourismPage";
 import ArtDetailPage from "./pages/ArtDetailPage";
+import PresentationPage from "./pages/PresentationPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/tourism" element={<TourismPage />} />
           <Route path="/responsible" element={<ResponsibleTourismPage />} />
           <Route path="/art/:id" element={<ArtDetailPage />} />
+          <Route path="/presentation" element={<PresentationPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

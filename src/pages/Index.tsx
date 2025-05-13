@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { StatsCard } from "@/components/StatsCard";
 import { Link } from "react-router-dom";
 import { artForms, regions } from "@/lib/data";
-import { Images, Map, PaintBucket, Book } from "lucide-react";
+import { Images, Map, PaintBucket, Book, Presentation } from "lucide-react";
 
 const Index = () => {
   // Get featured art forms (with UNESCO recognition or high popularity)
@@ -32,6 +32,9 @@ const Index = () => {
             </Button>
             <Button asChild variant="outline" size="lg">
               <Link to="/map">View Regional Map</Link>
+            </Button>
+            <Button asChild variant="secondary" size="lg">
+              <Link to="/presentation">View Presentation</Link>
             </Button>
           </div>
         </div>
