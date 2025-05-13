@@ -19,13 +19,26 @@ interface TourismData {
   growth: number;
 }
 
-interface TourismChartProps {
-  data: TourismData[];
-  type: "visitors" | "growth";
-  title: string;
+interface TourismTrend {
+  month: string;
+  domestic: number;
+  international: number;
+  year: number;
 }
 
-export function TourismChart({ data, type, title }: TourismChartProps) {
+interface TourismChartProps {
+  data: TourismData[] | TourismTrend[];
+  type?: "visitors" | "growth";
+  title?: string;
+  className?: string;
+}
+
+export function TourismChart({ 
+  data, 
+  type = "visitors", 
+  title = "Tourism Trends", 
+  className 
+}: TourismChartProps) {
   // Format large numbers with abbreviations (K for thousands, M for millions)
   const formatYAxis = (value: number): string => {
     if (value >= 1000000) {
@@ -45,8 +58,11 @@ export function TourismChart({ data, type, title }: TourismChartProps) {
     }
     return value.toString();
   };
+  
+  // Check if data is TourismTrend type by looking for month property
+  const isTrendData = data.length > 0 && 'month' in data[0];
 
-  // Get the right data to display based on the type
+  // Get the right data to display based on the type and data structure
   const getChartData = () => {
     if (type === "visitors") {
       return (
@@ -75,7 +91,7 @@ export function TourismChart({ data, type, title }: TourismChartProps) {
   };
 
   return (
-    <Card className="w-full">
+    <Card className={`w-full ${className || ""}`}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
       </CardHeader>
@@ -87,8 +103,8 @@ export function TourismChart({ data, type, title }: TourismChartProps) {
               margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="region" />
-              <YAxis tickFormatter={(value: any) => formatYAxis(value)} />
+              <XAxis dataKey={isTrendData ? "month" : "region"} />
+              <YAxis tickFormatter={formatYAxis} />
               <Tooltip
                 formatter={(value: number) => [formatNumber(value)]}
               />

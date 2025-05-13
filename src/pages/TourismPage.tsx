@@ -1,13 +1,19 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { TourismChart } from "@/components/TourismChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockTourismTrends, artForms } from "@/lib/data";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const TourismPage = () => {
+  const [selectedYear, setSelectedYear] = useState<number>(2023);
+  
+  // Filter tourism data by selected year
+  const filteredTourismData = mockTourismTrends.filter(item => item.year === selectedYear);
+  
   // Prepare data for pie charts
   const categoryData = artForms.reduce((acc: {name: string; value: number}[], art) => {
     const existingCategory = acc.find(item => item.name === art.category);
@@ -48,7 +54,29 @@ const TourismPage = () => {
         </header>
         
         {/* Tourism Trends Chart */}
-        <TourismChart data={mockTourismTrends} className="mb-8" />
+        <div className="mb-8">
+          <div className="flex flex-col md:flex-row justify-between mb-4">
+            <h2 className="text-xl md:text-2xl font-semibold">Monthly Tourism Trends</h2>
+            <Select
+              value={selectedYear.toString()}
+              onValueChange={(value) => setSelectedYear(parseInt(value))}
+            >
+              <SelectTrigger className="w-[120px]">
+                <SelectValue placeholder="Select Year" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="2021">2021</SelectItem>
+                <SelectItem value="2022">2022</SelectItem>
+                <SelectItem value="2023">2023</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <TourismChart 
+            data={filteredTourismData} 
+            title={`Monthly Visitor Statistics (${selectedYear})`} 
+            className="mb-8" 
+          />
+        </div>
         
         {/* Distribution Charts */}
         <Tabs defaultValue="category" className="mb-8">
